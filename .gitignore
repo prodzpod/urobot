@@ -1,2 +1,5 @@
 build/
 *.spec
+2kki_pre.json
+generated.json
+test.json

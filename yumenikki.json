@@ -1,0 +1,269 @@
+{
+    "worlds": {
+        "Madotsuki's Room": {"exits": { "Nexus": {}, "Staircase of Hands": {} }},
+        "Nexus": {"exits": {
+            "Madotsuki's Room": {},
+            "Number World": {},
+            "Neon World": {},
+            "Shield-Folk World": {},
+            "Candle World": {},
+            "Eyeball World": {},
+            "Graffiti World": {},
+            "Mural World": {},
+            "Snow World": {},
+            "Dark World": {},
+            "Puddle World": {},
+            "Block World": {},
+            "Forest World": {}
+        }},
+        "Number World": {"exits": {
+            "Nexus": {},
+            "Lamp World": {},
+            "Guillotine World": {},
+            "Mini Hell": {"Effect: Knife": true},
+            "Staircase of Hands": {}
+        }},
+        "Neon World": {"exits": {
+            "Nexus": {},
+            "Neon Tile Path": {}
+        }, "grants": { "_GLOBAL": {"Effect: Neon": true} }},
+        "Shield-Folk World": {"exits": {
+            "Nexus": {},
+            "Static Maze": {}
+        }, "grants": { "_GLOBAL": {"Effect: Cat": true} }},
+        "Candle World": {"exits": {
+            "Nexus": {},
+            "Checkered Tile Path": {},
+            "Staircase of Hands": {},
+            "Hell": {}
+        }, "grants": { "_GLOBAL": {"Effect: Cat": true}, "Hell": { "_STOP": true } }},
+        "Eyeball World": {"exits": {
+            "Nexus": {},
+            "Footprint Path": {}
+        }, "grants": { "_GLOBAL": {"Effect: Medamaude": true} }},
+        "Graffiti World": {"exits": {
+            "Nexus": {},
+            "Mall": {}
+        }, "grants": { "_GLOBAL": {"Effect: Bicycle": true} }},
+        "Mural World": {"exits": {
+            "Nexus": {},
+            "Sewers": {}
+        }, "grants": { "_GLOBAL": {"Effect: Long Hair": true, "Effect: Blonde Hair": true} }},
+        "Snow World": {"exits": {
+            "Nexus": {},
+            "Pink Sea": {},
+            "Staircase of Hands": {},
+            "Hell": {}
+        }, "grants": { "_GLOBAL": {"Effect: Yuki-onna": true}, "Hell": { "_STOP": true } }},
+        "Dark World": {"exits": {
+            "Nexus": {},
+            "Wilderness": { "Metaworld: Wilderness": false }
+        }, "grants": { "_GLOBAL": {"Effect: Knife": true} }},
+        "Puddle World": {"exits": {
+            "Nexus": {},
+            "Dense Woods A": {}
+        }, "grants": { "_GLOBAL": {"Effect: Umbrella": true} }},
+        "Block World": {"exits": {
+            "Nexus": {},
+            "White Desert A": {},
+            "Staircase of Hands": {}
+        }, "grants": { "_GLOBAL": {"Effect: Hat and Scarf": true} }},
+        "Forest World": {"exits": {
+            "Nexus": {},
+            "Face Carpet Plaza": {}
+        }, "grants": { "_GLOBAL": {"Effect: Frog": true} }},
+        "Face Carpet Plaza": {"exits": {
+            "Forest World": {},
+            "Hell": {},
+            "Neon Tile Path": {}
+        }, "grants": { "Neon Tile Path": { "_STOP": true } }},
+        "Hell": {"exits": {
+            "Face Carpet Plaza": {},
+            "Neon Tile Path": {},
+            "Checkered Tile Path": {},
+            "Footprint Path": {},
+            "Dark Woods": {},
+            "Docks B": {},
+            "Dense Woods A": {},
+            "Teleport Maze": {},
+            "Sky Garden": {}
+        }, "grants": { "Dense Woods A": { "_STOP": true }, "Teleport Maze": { "_STOP": true }, "Sky Garden": { "_STOP": true } }},
+        "White Desert A": {"exits": {
+            "Block World": {}
+        }},
+        "White Desert B": {"exits": {
+            "FC Dungeon": {},
+            "White Desert A": {}
+        }},
+        "White Desert Mountain Ring": {"exits": {
+            "Infinite Road": {}
+        }},
+        "Uboa's Trap": {"exits": {
+            "Poniko's House": {}
+        }},
+        "Poniko's House": {"exits": {
+            "Pink Sea": {},
+            "Uboa's Trap": {}
+        }},
+        "Dense Woods A": {"exits": {
+            "Puddle World": {},
+            "Infinite Road": {}
+        }},
+        "Dense Woods B": {"exits": {
+            "Mall": {},
+            "Teleport Maze": {}
+        }, "grants": { "_GLOBAL": {"Effect: Frog": true} }},
+        "Infinite Road": {"exits": {
+            "White Desert Mountain Ring": {}
+        }, "grants": { "_GLOBAL": {"Effect: Stoplight": true} }},
+        "Dark Woods": {"exits": {
+            "Hell": {},
+            "Traincar": {}
+        }},
+        "Traincar": {"exits": {
+            "Dark Woods": {},
+            "Witch's Island": {}
+        }},
+        "Witch's Island": {"exits": {
+            "Traincar": {}
+        }, "grants": { "_GLOBAL": {"Effect: Witch": true} }},
+        "Wilderness": {"exits": {
+            "Dark World": {},
+            "Barracks Settlement": {},
+            "Sky Garden": {}
+        }, "grants": { "_GLOBAL": {"Effect: Towel": true, "Metaworld: Wilderness": true} }},
+        "Barracks Settlement": {"exits": {
+            "Wilderness": { "Metaworld: Wilderness": false },
+            "Mural World": {},
+            "FC World B": {}
+        }},
+        "FC World B": {"exits": {
+            "FC House": {}
+        }, "grants": { "_GLOBAL": {"Effect: Buyo Buyo": true} }},
+        "Sky Garden": {"exits": {
+            "Wilderness": { "Metaworld: Wilderness": false },
+            "Ghost World": {}
+        }},
+        "Ghost World": {"exits": {
+            "Sky Garden": {}
+        }, "grants": { "_GLOBAL": {"Effect: Triangle Kerchief": true} }},
+        "Pink Sea": {"exits": {
+            "Snow World": {},
+            "Poniko's House": {}
+        }},
+        "Sewers": {"exits": {
+            "Mural World": {},
+            "Windmill World": {},
+            "Docks A": { "Effect: Midget": true }
+        }, "grants": { "_GLOBAL": {"Effect: Nopperabou": true} }},
+        "Windmill World": {"exits": {
+            "Docks A": {},
+            "Block World": {}
+        }},
+        "Docks A": {"exits": {
+            "Sewers": {}
+        }},
+        "Docks B": {"exits": {
+            "Hell": {},
+            "Wilderness": { "Metaworld: Wilderness": false }
+        }, "grants": { "_GLOBAL": {"Effect: Fat": true} }},
+        "Mall": {"exits": {
+            "Graffiti World": {},
+            "Dense Woods B": {}
+        }, "grants": { "_GLOBAL": {"Effect: Flute": true} }},
+        "Footprint Path": {"exits": {
+            "Eyeball World": {},
+            "Hell": {}
+        }},
+        "Checkered Tile Path": {"exits": {
+            "Candle World": {},
+            "Lamp World": {},
+            "Hell": {},
+            "Docks B": {}
+        }, "grants": { "Lamp World": { "_STOP": true }, "Docks B": { "_STOP": true }} },
+        "Static Maze": {"exits": {
+            "Shield-Folk World": {},
+            "FC House": {}
+        }},
+        "FC House": {"exits": {
+            "Static Maze": {},
+            "FC World A": {}
+        }, "grants": { "_GLOBAL": {"Effect: Demon": true}, "FC World A": { "_STOP": true } }},
+        "Neon Tile Path": {"exits": {
+            "Neon World": {},
+            "Hell": {}
+        }},
+        "Lamp World": {"exits": {
+            "Number World": {},
+            "Checkered Tile Path": {}
+        }, "grants": { "_GLOBAL": {"Effect: Lamp": true}, "Checkered Tile Path": { "_STOP": true } }},
+        "Guillotine World": {"exits": {
+            "Number World": {},
+            "Hell": {},
+            "Dense Woods A": {}
+        }, "grants": { "_GLOBAL": {"Effect: Severed Head": true}, "Hell": { "_STOP": true }, "Dense Woods A": { "_STOP": true } }},
+        "Mini Hell": {"exits": {
+            "Number World": {}
+        }},
+        "Teleport Maze": {"exits": {
+            "Wilderness 2": { "Metaworld: Wilderness": false }
+        }},
+        "Wilderness 2": {"exits": {
+            "Static Tunnel": {}
+        }, "grants": { "_GLOBAL": {"Metaworld: Wilderness": true} }},
+        "Static Tunnel": {"exits": {
+            "FC World A": {}
+        }},
+        "FC World A": {"exits": {
+            "Static Tunnel": {},
+            "FC Dungeon": {}
+        }},
+        "FC Dungeon": {"exits": {
+            "FC World A": {},
+            "White Desert B": {}
+        }},
+        "Staircase of Hands": {"exits": {
+            "Underground World": {}
+        }},
+        "Underground World": {"exits": {
+            "Mall": {},
+            "Spaceship": { "Effect: Umbrella": true },
+            "Spaceship 2": { "Effect: Yuki-onna": true }
+        }, "grants": { "Spaceship": {"Effect: Poop Hair": true}, "Spaceship 2": {"Effect: Poop Hair": true} }},
+        "Spaceship": {"exits": {
+            "Mars": {}
+        }},
+        "Spaceship 2": {"exits": {
+            "Mars": {}
+        }},
+        "Mars": {"exits": {}}
+    },
+    "flags": {    
+        "Effect: Frog": false,
+        "Effect: Umbrella": false,
+        "Effect: Hat and Scarf": false,
+        "Effect: Yuki-onna": false,
+        "Effect: Knife": false,
+        "Effect: Medamaude": false,
+        "Effect: Fat": false,
+        "Effect: Midget": false,
+        "Effect: Flute": false,
+        "Effect: Neon": false,
+        "Effect: Nopperabou": false,
+        "Effect: Severed Head": false,
+        "Effect: Towel": false,
+        "Effect: Cat": false,
+        "Effect: Lamp": false,
+        "Effect: Bicycle": false,
+        "Effect: Long Hair": false,
+        "Effect: Poop Hair": false,
+        "Effect: Blonde Hair": false,
+        "Effect: Triangle Kerchief": false,
+        "Effect: Witch": false,
+        "Effect: Demon": false,
+        "Effect: Buyo Buyo": false,
+        "Effect: Stoplight": false,
+        "Metaworld: Wilderness": false
+    },
+    "start": "Madotsuki's Room"
+}

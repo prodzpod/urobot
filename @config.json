@@ -1,0 +1,15 @@
+{
+    "general": {
+        "start_goal": 2,
+        "verbose": false
+    },
+    "z3": {
+
+    },
+    "bruteforce": {
+        "bfs_until": 1,
+        "midpoint_every": 100000,
+        "midpoint_timeout": 2,
+        "timeout_increment": 0.1
+    }
+}
