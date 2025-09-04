@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import math
@@ -133,6 +134,7 @@ with open("@config.json") as f:
     CONFIG = json.loads(f.read())
 WORLDS = []
 FLAGS = []
+FILE = None
 START = ""
 GOAL = CONFIG["general"]["start_goal"]
 BFS_UNTIL = CONFIG["bruteforce"]["bfs_until"]
@@ -141,13 +143,13 @@ FINAL_TXT = ""
 print("\nUROBOT 2.0\n")
 if os.path.exists(sys.argv[1]):
     with open(sys.argv[1]) as f:
-        file = json.loads(f.read())
-    for k, v in file["worlds"].items():
+        FILE = json.loads(f.read())
+    for k, v in FILE["worlds"].items():
         WORLDS.append(World(k, v["exits"], v["grants"] if "grants" in v else {}))
-    for k, v in file["flags"].items():
+    for k, v in FILE["flags"].items():
         FLAGS.append(Flag(k, v))
     FLAGS.append(Flag("_STOP"))
-    START = file["start"]
+    START = FILE["start"]
 else: print("File does not exist!")
 #
 TOTAL = reduce(lambda a, b: a + b, [w.increment for w in WORLDS])
@@ -219,8 +221,15 @@ class Bruteforce_Path():
         return ret if success else None
 WORLDS2 = {}
 def bruteforce_search():
-    global GOAL, DONE, WORLDS, WORLDS2
+    global GOAL, DONE, WORLDS, WORLDS2, FILE
     # pretreatment
+    if "blacklist" in FILE:
+        WORLDS = [w for w in WORLDS if w not in FILE["blacklist"]]
+        for w in WORLDS:
+            for k in list(w.dests.keys()):
+                if k in FILE["blacklist"]: del w.dests[k]
+            for k in list(w.grants.keys()):
+                if k in FILE["blacklist"]: del w.grants[k]
     for w in WORLDS:
         w.finalbonus = 0
         for k, v in w.grants.items():
@@ -237,7 +246,7 @@ def bruteforce_search():
                     pretreatment_finished = False
                     if w.finalbonus + w.increment > entry.finalbonus:
                         entry.finalbonus = w.finalbonus + w.increment
-                        entry.finalworlds = w.finalworlds + [w.name]
+                        entry.finalworlds = [w.name] + w.finalworlds
                     del entry.dests[w.name]
         for w in [w for w in WORLDS if len(w.dests) == 1 and w.dests[next(iter(w.dests))] == {}]:
             for entry in WORLDS:
@@ -245,7 +254,7 @@ def bruteforce_search():
                     pretreatment_finished = False
                     if w.finalbonus + w.increment > entry.finalbonus:
                         entry.finalbonus = w.finalbonus + w.increment
-                        entry.finalworlds = w.finalworlds + [w.name]
+                        entry.finalworlds = [w.name] + w.finalworlds
                     del entry.dests[w.name]
     pretreatment_finished = False
     while pretreatment_finished == False:
@@ -257,14 +266,22 @@ def bruteforce_search():
         WORLDS = [w for w in WORLDS if w.name in rfound]
     for w in WORLDS:
         WORLDS2[w.name] = w
+    for w in WORLDS:
+        ndest = {}
+        for x in sorted(list(w.dests), key=lambda x: -1 if (("includes" in FILE and x in FILE["includes"]) or ("goal" in FILE and x == FILE["goal"])) else len(list(WORLDS2[x].dests)), reverse=True):
+            ndest[x] = w.dests[x]
+        w.dests = ndest
     found = []
     last_found = time.time()
     stack = deque([Bruteforce_Path(WORLDS2[START].increment, [START], WORLDS2[START].grants["_GLOBAL"] if "_GLOBAL" in WORLDS2[START].grants else {})])
     timeout = CONFIG["bruteforce"]["midpoint_timeout"]
-    printing = False
+    printing = "maxlength" in FILE
     calc = 0
     shuffled = 0
     midpoint = CONFIG["bruteforce"]["midpoint_every"]
+    has_goal = "goal" in FILE
+    has_maxlength = "maxlength" in FILE
+    has_includes = "includes" in FILE
     while len(stack) > 0:
         if calc % midpoint == 0:
             if CONFIG["general"]["verbose"]: print("%s entries in stack, %s calculations done" % (str(len(stack)), str(calc)))
@@ -301,7 +318,7 @@ def bruteforce_search():
             if d in pop.path: continue
             ret = pop.traverse(cw.dests[d], d)
             if ret == None: continue
-            if ret.point + WORLDS2[d].finalbonus >= GOAL:
+            if (has_goal == False or d == FILE["goal"]) and (has_includes == False or all([(x in ret.path) for x in FILE["includes"]])) and ret.point + WORLDS2[d].finalbonus >= GOAL:
                 GOAL = ret.point + WORLDS2[d].finalbonus + 1
                 print("Path of length %s found" % str(ret.point + WORLDS2[d].finalbonus))
                 last_found = time.time()
@@ -316,10 +333,13 @@ def bruteforce_search():
                 if printing == True:
                     print("    Flags: " + ", ".join(ret.flags))
                     for i, x in enumerate(found):
-                        print("    %s: %s" % (str(i+1), x))
+                        print("    %s: %s" % (str(i+1), re.sub(r" \(\d+\)$", "", x)))
                     for i, x in enumerate(WORLDS2[d].finalworlds):
-                        print("    %s: %s" % (str(i+len(ret.path)+1), x))
-            stack.append(ret)
+                        print("    %s: %s" % (str(i+len(ret.path)+1), re.sub(r" \(\d+\)$", "", x)))
+            if (has_goal == False or d != FILE["goal"]) and (has_maxlength == False or len(ret.path) <= FILE["maxlength"]):
+                stack.append(ret)
+        if has_maxlength and GOAL > FILE["maxlength"]:
+            break
     print("Final Length: " + str(GOAL - 1) + ", Terminating")
     DONE = True
     return len(found)

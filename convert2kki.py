@@ -46,11 +46,39 @@ EFFECTS_PREREQUISITE = {
     "Twintails": ["The Deciding Street", "Telephone"],
     "Trombone": ["The Baddies Bar", "Chainsaw"],
 }
+EFFECTS_AND = [
+    ("Underground Subway", "Dice Swamp"),
+    ("Apartments", "Dream Park"),
+    ("Binary World", "Circuit Board"),
+    ("Binary World", "Cyber Bar"),
+    ("Fairy Tale Woods", "Jigsaw Puzzle World"),
+    ("Graveyard World", "Dream Park"),
+    ("Carnage Carnival", "Forest of Reflections"),
+    ("Rainbow Road", "Video Game Graveyard"),
+    ("The Baddies Bar", "The Slums"),
+    ("The Baddies Bar", "Garden World"),
+    ("The Baddies Bar", "Sewers"),
+    ("The Baddies Bar", "The Invisible Maze"),
+    ("Shadowy Caves", "Guardians' Realm"),
+    ("Tapir-San's Place", "Space"),
+    ("Dream Pool", "Dark Nexus"),
+    ("Dream Pool", "Azure Garden"),
+    ("Nazca Valley", "Sky Cactus Zone"),
+    ("Sky Cactus Zone", "Nazca Valley"),
+    ("Vase World", "Hand Fields"),
+    ("Vase World", "Burial Desert"),
+    ("Hatred Palace", "Digital Heart Space"),
+    ("Realm of Dice", "Playing Card Dungeon"),
+    ("Maple Forest", "Star Hub"),
+    ("Shaded Hallways", "Burgundy Flats"),
+    ("Tricolor Room", "The Slums")
+]
 ret = {
     "worlds": {},
     "flags": {
-        "Season: SS/FW": None,
-        "Season: SF/SW": None,
+        "Season: SS/FW": False,
+        "Season: SF/SW": False,
+        "44: >128": None,
     },
     "start": "Urotsuki's Room"
 }
@@ -58,7 +86,6 @@ backup_worlds = []
 def create_metaworld(base, fns):
     global ret
     ret["flags"]["Metaworld: %s" % base] = False
-    ret["worlds"][base]
     if "_GLOBAL" not in ret["worlds"][base]["grants"]: ret["worlds"][base]["grants"]["_GLOBAL"] = {}
     ret["worlds"][base]["grants"]["_GLOBAL"]["Metaworld: %s" % base] = True
     for entry in ret["worlds"]:
@@ -123,7 +150,11 @@ for entry in pre:
                     for eff in effects[1:]:
                         eff = eff.replace("Teru Teru B\u014dzu", "Teru Teru Bozu")
                         ret["flags"]["Effects: " + eff] = False
-                    backup_worlds.append((entry["name"], worlds[e["targetId"]]["name"], effects))
+                    if (entry["name"], worlds[e["targetId"]]["name"]) in EFFECTS_AND:
+                        for eff in effects:
+                            ret["worlds"][entry["name"]]["exits"][worlds[e["targetId"]]["name"]]["Effects: " + eff] = True
+                    else: 
+                        backup_worlds.append((entry["name"], worlds[e["targetId"]]["name"], effects))
                 else: ret["worlds"][entry["name"]]["exits"][worlds[e["targetId"]]["name"]]["Effects: " + eff] = True
         if e["type"] & 2048 > 0:
             season = e["typeParams"]["2048"]["params"]
@@ -149,12 +180,12 @@ ret["worlds"]["Sushi Belt World"]["exits"]["Humanism (2)"]["Effect: Maiko"] = Tr
 # enable the great virtualcity loopback
 ret["worlds"]["Field of Cosmos"]["exits"]["Bubble World"] = {}
 ret["worlds"]["Adabana Gardens"]["exits"]["Bubble World"] = {}
+ret["flags"]["qxy3 shortcut"] = False
 ret["worlds"]["Guts World"]["exits"]["Red Sewers"] = {}
 ret["worlds"]["Guts World"]["grants"]["Red Sewers"] = {"qxy3 shortcut": True}
-ret["worlds"]["Red Sewers"]["exits"]["Bubble World"] = {"qxy3 shortcut": True}
-ret["worlds"]["Red Sewers"]["exits"]["Guts World"] = {"qxy3 shortcut": False}
-ret["flags"]["qxy3 shortcut"] = False
-ret["worlds"]["Glitched Butterfly Sector"]["exits"]["Sierpinski Maze"] = {}
+ret["worlds"]["Red Sewers"]["exits"]["Bubble World"] = {"qxy3 shortcut": False}
+ret["worlds"]["Red Sewers"]["exits"]["Guts World"] = {"qxy3 shortcut": True}
+ret["worlds"]["Glitched Butterfly Sector"]["exits"]["Sierpinski Maze"] = {"qxy3 shortcut": False}
 ret["worlds"]["Virtual City"]["exits"]["River Complex"] = { "Effects: Telephone": True }
 def rainy1(w): w["exits"]["Rainy Apartments"] = { "qxy3 shortcut": False }; return w
 create_metaworld("Virtual City", [[rainy1, lambda w, fr: w if fr != "River Complex" else None]])
@@ -191,6 +222,75 @@ create_metaworld("Maple Forest", [[lambda w: w, lambda _, __: None]])
 ret["worlds"]["Maple Forest (2)"]["exits"] = {"Four Seasons Forest": {}, "Deserted Center": {}}
 ret["worlds"]["Four Seasons Forest"]["exits"]["Maple Forest (2)"] = {}
 ret["worlds"]["Deserted Center"]["exits"]["Maple Forest (2)"] = {}
+# cloud tops divide
+ret["worlds"]["Cloud Tops (4)"] = {"exits": {}, "grants": { "_GLOBAL": { "Metaworld: Cloud Tops": True } }}
+ret["worlds"]["Cloud Tops (5)"] = {"exits": {}, "grants": { "_GLOBAL": { "Metaworld: Cloud Tops": True } }}
+ret["worlds"]["Cloud Tops (6)"] = {"exits": {}, "grants": { "_GLOBAL": { "Metaworld: Cloud Tops": True } }}
+ret["worlds"]["Cloud Tops"]["exits"] = { # day
+    "Art Gallery": { "Metaworld: Art Gallery": False },
+    "School": {},
+    "Restored Sky Kingdom": {},
+}
+ret["worlds"]["Cloud Tops (2)"]["exits"] = { # crepuscule
+    "Art Gallery": { "Metaworld: Art Gallery": False },
+    "Tricolor Room": {},
+    "Sauna Corridors": {},
+}
+ret["worlds"]["Cloud Tops (3)"]["exits"] = { # night
+    "Art Gallery": { "Metaworld: Art Gallery": False },
+    "Constellation World": { "Metaworld: Constellation World": False },
+    "Geometry World": {},
+}
+ret["worlds"]["Cloud Tops (4)"]["exits"] = { # dusk
+    "Art Gallery": { "Metaworld: Art Gallery": False },
+    "Neon Candle World": {},
+    "City Limits": {
+        "Metaworld: City Limits": False,
+        "Effects: Bat": True
+    },
+    "City Limits (2)": {
+        "Metaworld: City Limits": False,
+        "Effect: Fairy": True
+    },
+    "City Limits (3)": {
+        "Metaworld: City Limits": False,
+        "Effect: Spacesuit": True
+    }
+}
+ret["worlds"]["City Limits"]["exits"]["Cloud Tops (4)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops"]
+ret["worlds"]["City Limits (2)"]["exits"]["Cloud Tops (4)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops"]
+ret["worlds"]["City Limits (3)"]["exits"]["Cloud Tops (4)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops"]
+del ret["worlds"]["City Limits"]["exits"]["Cloud Tops"]
+ret["worlds"]["City Limits"]["exits"]["Cloud Tops (5)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (2)"]
+ret["worlds"]["City Limits (2)"]["exits"]["Cloud Tops (5)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (2)"]
+ret["worlds"]["City Limits (3)"]["exits"]["Cloud Tops (5)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (2)"]
+del ret["worlds"]["City Limits"]["exits"]["Cloud Tops (2)"]
+ret["worlds"]["City Limits"]["exits"]["Cloud Tops (6)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (3)"]
+ret["worlds"]["City Limits (2)"]["exits"]["Cloud Tops (6)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (3)"]
+ret["worlds"]["City Limits (3)"]["exits"]["Cloud Tops (6)"] = ret["worlds"]["City Limits"]["exits"]["Cloud Tops (3)"]
+del ret["worlds"]["City Limits"]["exits"]["Cloud Tops (3)"]
+del ret["worlds"]["City Limits (2)"]["exits"]["Cloud Tops"]
+del ret["worlds"]["City Limits (3)"]["exits"]["Cloud Tops"]
+ret["worlds"]["Constellation World"]["exits"]["Cloud Tops (3)"] = ret["worlds"]["Constellation World"]["exits"]["Cloud Tops"]
+del ret["worlds"]["Constellation World"]["exits"]["Cloud Tops"]
+ret["worlds"]["Constellation World (2)"]["exits"]["Cloud Tops (3)"] = ret["worlds"]["Constellation World (2)"]["exits"]["Cloud Tops"]
+del ret["worlds"]["Constellation World (2)"]["exits"]["Cloud Tops"]
+ret["worlds"]["Candlelit Factory"]["exits"]["Cloud Tops (2)"] = ret["worlds"]["Candlelit Factory"]["exits"]["Cloud Tops"]
+ret["worlds"]["Candlelit Factory"]["exits"]["Cloud Tops (3)"] = ret["worlds"]["Candlelit Factory"]["exits"]["Cloud Tops"]
+del ret["worlds"]["Candlelit Factory"]["exits"]["Cloud Tops"]
+ret["worlds"]["Neon Candle World"]["exits"]["Cloud Tops (4)"] = ret["worlds"]["Neon Candle World"]["exits"]["Cloud Tops"]
+del ret["worlds"]["Neon Candle World"]["exits"]["Cloud Tops"]
+# legacy of ruin split
+del ret["worlds"]["Underneath"]["exits"]["Legacy of Ruin"]
+del ret["worlds"]["Underneath"]["exits"]["Legacy of Ruin (2)"]
+del ret["worlds"]["Underneath"]["exits"]["Legacy of Ruin (3)"]
+del ret["worlds"]["Underneath"]["grants"]["Legacy of Ruin"]
+ret["worlds"]["Underground Subway"]["exits"]["Legacy of Ruin (2)"] = ret["worlds"]["Underground Subway"]["exits"]["Legacy of Ruin"]
+del ret["worlds"]["Underground Subway"]["exits"]["Legacy of Ruin"]
+del ret["worlds"]["Underground Subway"]["grants"]["Legacy of Ruin"]
+del ret["worlds"]["Legacy of Ruin"]["exits"]["Underneath"]
+del ret["worlds"]["Legacy of Ruin (2)"]["exits"]["TST MAP"]
+# whatever is after TST_MAP is horribly connected & largely inconsequential as they are 1-2 deep deadends
 # 256s
 ret["flags"]["visited forest pier"] = False
 ret["worlds"]["Forest Pier"]["grants"]["_GLOBAL"] = { "visited forest pier": True }
@@ -325,6 +425,42 @@ ret["worlds"]["Burgundy Flats"]["exits"]["Disfigured Expanse"] = { "visited Drea
 ret["flags"]["visited Fish Person Shoal"] = False
 ret["worlds"]["Fish Person Shoal"]["grants"]["_GLOBAL"] = { "visited Fish Person Shoal": True }
 ret["worlds"]["Somber Waterfront"]["exits"]["Quarter Flats"] = { "visited Fish Person Shoal": True }
+ret["worlds"]["Urotsuki's Dream Apartments"]["grants"]["_GLOBAL"] = {
+        "Season: SS/FW": None,
+        "Season: SF/SW": None,
+        "44: >128": None,
+    }
+del ret["worlds"]["Floating Brain World"]["exits"]["Spike Alley"]
+del ret["worlds"]["Forlorn Beach House"]["exits"]["Fairy Tale Woods"]
+del ret["worlds"]["Forlorn Beach House"]["exits"]["Broken Faces Area"]
+ret["flags"]["visited Urotsuki's Dream Apartments"] = False
+ret["worlds"]["Urotsuki's Dream Apartments"]["grants"]["_GLOBAL"] = { "visited Urotsuki's Dream Apartments": True }
+ret["worlds"]["Forlorn Beach House"]["exits"]["Art Gallery"] = { "visited Urotsuki's Dream Apartments": True }
+ret["worlds"]["Forlorn Beach House"]["exits"]["The Hand Hub"] = { "visited Urotsuki's Dream Apartments": True }
+# explorer is wrong??
+del ret["worlds"]["Heart World"]["exits"]["Oil Puddle World B"]
+ret["worlds"]["Nefarious Chessboard"]["exits"]["Fake Apartments"] = { "Effect: Bat": True }
+ret["flags"]["visited Fluorescent City"] = False
+ret["worlds"]["Fluorescent City"]["grants"]["_GLOBAL"] = { "visited Fluorescent City": True }
+ret["worlds"]["Techno Rave Ruins"]["exits"]["Subpixel Pathway"] = { "visited Fluorescent City": True }
+del ret["worlds"]["Sugar World"]["exits"]["Icy Plateau"]
+del ret["worlds"]["Neon Slums"]["exits"]["Fluorescent City"] # you cant go to fluocity if you didnt enter from there :c
+del ret["worlds"]["Somber Establishment"]["exits"]["Elysium Pools"]
+# v44 stuff
+ret["worlds"]["Rose Factory"]["exits"]["Cloud Haven"] = { "44: >128": True }
+ret["worlds"]["Rose Factory"]["exits"]["Lovestruck Realm"] = { "44: >128": False }
+ret["worlds"]["The Magic Nexus"]["exits"]["Cloud Haven"] = { "44: >128": True }
+ret["worlds"]["The Magic Nexus"]["exits"]["Lovestruck Realm"] = { "44: >128": False }
+ret["worlds"]["Urotsuki's Dream Apartments"]["exits"]["House of Vases"] = { "44: >128": True }
+ret["worlds"]["Beige Hallway of Wa"]["exits"]["Hiragana Board"] = { "44: >128": True }
+ret["worlds"]["Hiragana Board"]["exits"]["Beige Hallway of Wa"] = { "44: >128": True }
+ret["worlds"]["Stingray Skies"]["exits"]["Coral Shoal"] = { "44: >128": True }
+ret["worlds"]["Serpent Ruins A"]["exits"]["Serpent Ruins B"] = { "44: >128": True }
+ret["worlds"]["Serpent Ruins B"]["exits"]["Serpent Ruins A"] = { "44: >128": True }
+ret["worlds"]["Ticking Blackout Zone"]["exits"]["Portrait Purgatory"] = { "44: >128": True }
+ret["worlds"]["Portrait Purgatory"]["exits"]["Ticking Blackout Zone"] = { "44: >128": True }
+ret["worlds"]["Himalayan Salt Shoal"]["exits"]["Glitched Purgatory"] = { "44: >128": True }
+ret["worlds"]["Sunrise Road"]["exits"]["Sanguine Stare"] = { "44: >128": False, "Effects: Red Riding Hood": True }
 # End of Manual Changes Zone
 with open("2kki.json", "w", encoding="utf8") as f:
     f.write(json.dumps(ret))
